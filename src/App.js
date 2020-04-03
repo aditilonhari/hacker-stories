@@ -54,10 +54,6 @@ const App = () => {
     isError: false
   });
 
-  const searchedStories = stories.data.filter(story =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const handleSearch = event => {
     setSearchTerm(event.target.value);
   };
@@ -69,7 +65,7 @@ const App = () => {
     });
   };
 
-  React.useEffect(() => {
+  const handleFetchStories = React.useCallback(() => {
     if (!searchTerm) return;
     dispatchStories({ type: "STORIES_FETCH_INIT" });
 
@@ -83,6 +79,10 @@ const App = () => {
       })
       .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
   }, [searchTerm]);
+
+  React.useEffect(() => {
+    handleFetchStories();
+  }, [handleFetchStories]);
 
   return (
     <div>
